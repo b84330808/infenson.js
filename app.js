@@ -14,6 +14,7 @@ server.on('request', router);
 
 /* ptys manager */
 var ptyMan = {};
+var c = '';
 
 /* socket server for terminal control */
 /* on connected */
@@ -36,6 +37,8 @@ socketio(server).of('termctl').on('connection', function(socket) {
         ptyMan[name] = {
             obj: newPty
         };
+
+        
 
         /* if one socket disconnected, kill the spawned terminal */
         socket.on('disconnect', function() {
