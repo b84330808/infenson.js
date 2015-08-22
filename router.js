@@ -1,6 +1,7 @@
 var fs = require('fs');
 var routePairs = {
 	'/'						: '/index.html',
+	'/index.js'				: '/node_modules/index.js',
 	'/terminal.js'			: '/node_modules/terminal.js/dist/terminal.js',
 	'/socket.io-stream.js'	: '/node_modules/socket.io-stream/socket.io-stream.js'
 };

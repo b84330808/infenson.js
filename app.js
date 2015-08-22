@@ -12,45 +12,57 @@ var server = http.createServer().listen(config.port, config.interface); // only 
 var router = require('./router.js');
 server.on('request', router);
 
-/**/
-var ptys = {};
+/* ptys manager */
+var ptyMan = {};
 
 /* socket server for terminal control */
 /* on connected */
 socketio(server).of('termctl').on('connection', function(socket) {
-    // receives a bidirectional pipe from the client see index.html
-    // for the client-side
-    ss(socket).on('new', function(stream, options) {
-        var name = options.name;
-
-/////*****style******///////
-        var pty = gy.spawn('bash', [], {
-            name: '',
+    /* receives a message for new bash child process */
+    ss(socket).on('new', function(stream, name) {
+        /* start a new bash child process */
+        var newPty = gy.spawn('bash', [], {
+            // name: '',
             cols: 80,
             rows: 30,
             cwd: process.env.HOME,
             env: process.env
         });
 
+        /* connect the bidirectional pipe from front-end */
+        newPty.stdout.pipe(stream).pipe(newPty.stdin);
 
-        pty.stdout.pipe(stream).pipe(pty.stdin);
-        ptys[name] = pty;
+        /**/
+        ptyMan[name] = {
+            obj: newPty
+        };
 
-        /* if one socket disconnected, the spawned terminal */
+        /* if one socket disconnected, kill the spawned terminal */
         socket.on('disconnect', function() {
-            pty.kill('SIGHUP');
-            delete ptys[name];
+            newPty.kill('SIGHUP');
+            delete ptyMan[name];
         });
+    });
+
+    /**/
+    socket.on('remove', function(name) {
+        ptyMan[name].obj.kill('SIGHUP');
+        delete ptyMan[name];
+    });
+
+    /**/
+    socket.on('hello', function() {
+        console.log(ptyMan);
     });
 });
 
 /* if end process, kill all spawned terminals */
 process.on('exit', function() {
-    var k = Object.keys(ptys);
-    var i;
+    var keys = Object.keys(ptyMan);
 
-    for (i = 0; i < k.length; i++) {
-        ptys[k].kill('SIGHUP');
+    for (var i in keys) {
+        ptyMan[i].obj.kill('SIGHUP');
+        delete ptyMan[i];
     }
 });
 

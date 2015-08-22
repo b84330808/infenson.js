@@ -15,43 +15,14 @@
     </head>
 
     <body>
-
-        <pre class="terminal" data-columns="80" data-rows="30"></pre>
-        <pre class="terminal" data-columns="80" data-rows="30"></pre>
-        
+        <div id="container">
+            Hello
+        </div>
     </body>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/socket.io-stream.js"></script>
     <script src="/terminal.js"></script>
-    <script>
-    /**/
-    var containers = document.getElementsByClassName('terminal');
-    /* socket for terminal control */
-    var socket = io(location.origin + '/termctl');
-    /*  */
-    var term;
-    /**/
-    var stream;
-
-
-    for (var i = 0; i < containers.length; i++) {
-
-        // use data-* attributes to configure terminal and child_pty
-        term = new Terminal(containers[i].dataset);
-     
-        // Create bidirectional stream
-        stream = ss.createStream({
-            decodeStrings: false,
-            encoding: 'utf-8'
-        });
-
-        // Send stream and options to the server
-        ss(socket).emit('new', stream, containers[i].dataset);
-
-        // Connect everything up
-        stream.pipe(term).dom(containers[i]).pipe(stream);
-
-    }
-    </script>
+    <script src="/index.js"></script>
 
 </html>
