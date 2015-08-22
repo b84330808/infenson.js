@@ -9,8 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "pty": "*",
-    "socket.io": "^1.2.0",
-    "socket.io-stream": "^0.6.0",
-    "terminal.js": "^1.0.3"
+    "socket.io": "*",
+    "socket.io-stream": "*",
+    "terminal.js": "*"
   }
 }
