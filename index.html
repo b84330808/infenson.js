@@ -3,21 +3,40 @@
     <head>
         <meta charset="utf-8" />
         <title>MultiWebTerminal</title>
-    
-        <style>
-        .terminal {
-            background: black;
-            color: white;
-            font-family: Courier, monospace;
-            display: inline-block;
-        }
-        </style>
+        
+        <link rel="stylesheet" type="text/css" href="/menu.css"/>
+        <link rel="stylesheet" type="text/css" href="/index.css"/>
     </head>
 
     <body>
-        <div id="container">
-            Hello
+        <div id="leftp">
+            Something for stuffed.
         </div>
+
+        <div id="cssmenu">
+            <ul>
+                <li><a href="javascript:createNewTerminal();"><span>New terminal</span></a></li>
+                <li class="active has-sub"><a href="#"><span>Command</span></a>
+                <ul id="termlist">
+                    <!--
+                    <li class="has-sub"><a href="#"><span>Product 1</span></a>
+                        <ul>
+                            <li><a href="#"><span>Sub Product</span></a></li>
+                            <li><a href="#"><span>Sub Product</span></a></li>
+                        </ul>
+                    </li>
+                    -->
+                </ul>
+                </li>
+                <li><a href="#"><span>Not implemented</span></a></li>
+                <li class="last"><a href="#"><span>KerKer</span></a></li>
+            </ul>
+        </div>
+
+        <div id="rightp">
+            <div id="container">
+            </div>
+        </div>       
     </body>
 
     <script src="/socket.io/socket.io.js"></script>

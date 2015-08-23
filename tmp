@@ -1,0 +1,12 @@
+lscd De	]0;kenchou@: ~Kenchou:~$ ls
+a.out    [0m[01;34mDocuments[0m         [01;34mMusic[0m         [01;34mPublic[0m        [01;34mTemplates[0m
+[01;34mbin[0m      [01;34mDownloads[0m         [01;34mnode_modules[0m  [01;34mR[0m             [01;34mVideos[0m
+[01;34mDesktop[0m  examples.desktop  [01;34mPictures[0m      [01;34mSublimeText2[0m  [01;34mworkspace[0m
+]0;kenchou@: ~Kenchou:~$ cd
+]0;kenchou@: ~Kenchou:~$ hello
+The program 'hello' can be found in the following packages:
+ * hello
+ * hello-debhelper
+Try: sudo apt-get install <selected package>
+]0;kenchou@: ~Kenchou:~$ cd Desktop/
+]0;kenchou@: ~/DesktopKenchou:~/Desktop$ 

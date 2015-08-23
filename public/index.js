@@ -5,7 +5,6 @@ for(var i = 0; i < 10; i++){
 }
 /* terminals manager */
 var termMan = {};
-var c= '';
 
 /* socket for terminal control */
 var socket = io(location.origin + '/termctl');
@@ -29,8 +28,8 @@ function createNewTerminal(){
         var newTerm = document.createElement('pre');
         newTerm.setAttribute('id', 'term' + tid);
         newTerm.setAttribute('class', 'terminal');
-        newTerm.setAttribute('data-columns', '80');
-        newTerm.setAttribute('data-rows', '30');
+        newTerm.setAttribute('data-columns', '50');
+        newTerm.setAttribute('data-rows', '24');
         newTerm.setAttribute('ondblclick', 'removeTerminal(this.id);');
         /* create new terminal object */
         var term = new Terminal(newTerm.dataset);    
@@ -45,23 +44,61 @@ function createNewTerminal(){
         stream.pipe(term).dom(newTerm).pipe(stream);
 
         /* append the new terminal object to container */
-        document.getElementById('container').appendChild(newTerm);
+        var newCloseBtn = document.createElement('a');
+        newCloseBtn.setAttribute('class', 'close-button');
+        newCloseBtn.setAttribute('href', 'javascript:removeTerminal(\'term' + tid + '\')');
+        newCloseBtn.innerHTML = 'X';
 
-        // .on('data', function (data) {
-        //     if(data == '\r\n'){
-        //         if(c.length != 0){
-        //             alert(c);
-        //             c ='';
-        //         }
-        //     }
-        //     else if(data.length == 1){
-        //         c += data;
-        //     }
+        var newTermHeader = document.createElement('div');
+        newTermHeader.setAttribute('class', 'terminal-header');
+        newTermHeader.innerHTML = 'term' + tid;
+        newTermHeader.appendChild(newCloseBtn);
+
+        var newTermCont = document.createElement('div');
+        newTermCont.setAttribute('class', 'terminal-cont');
+        newTermCont.appendChild(newTermHeader);
+        newTermCont.appendChild(newTerm);
+
+        document.getElementById('container').appendChild(newTermCont);
+
+        /* add cmds pre-defined */
+        var l = ['ls', 'cd ..', 'cd ~'];
+        var newMenutagName = document.createElement('span');
+        newMenutagName.innerHTML = 'Term ' + tid;
+
+        var newMenutagA = document.createElement('a');
+        newMenutagA.setAttribute('href', '#');
+        newMenutagA.appendChild(newMenutagName);
+
+        var newMenutag = document.createElement('li');
+        newMenutag.setAttribute('class', 'has-sub');
+        newMenutag.appendChild(newMenutagA);
+
+        var newMenutagUl = document.createElement('ul');
+        newMenutag.appendChild(newMenutagUl);
+        for(var i in l){
+            var newCmdName = document.createElement('span');
+            newCmdName.innerHTML = l[i];
+
+            var newCmdA = document.createElement('a');
+            newCmdA.setAttribute('href', 'javascript:runCommand(\'term' + tid + '\', \'' + l[i] + '\');');
+            newCmdA.appendChild(newCmdName);
+
+            var newCmd = document.createElement('li');
+            newCmd.appendChild(newCmdA);
+            
+            newMenutagUl.appendChild(newCmd);
+        }
+        document.getElementById('termlist').appendChild(newMenutag);
+
+        /* for getting user's input command */
+        // stream.on('data', function (data) {
         // });
 
         /*  */
         termMan['term' + tid] = {
-            obj: newTerm,
+            obj: newTermCont,
+            menutag: newMenutag,
             stream: stream
         };
     }
@@ -72,9 +109,14 @@ function createNewTerminal(){
 
 function removeTerminal(termName){
     document.getElementById('container').removeChild(termMan[termName].obj);
+    document.getElementById('termlist').removeChild(termMan[termName].menutag);
     termNums[parseInt(termName[4])] = false;
     delete termMan[termName];
     socket.emit('remove', termName);
+}
+
+function runCommand(termName, cmd){
+    termMan[termName].stream.write(cmd + '\n');
 }
 
 /* old codes */

@@ -14,7 +14,6 @@ server.on('request', router);
 
 /* ptys manager */
 var ptyMan = {};
-var c = '';
 
 /* socket server for terminal control */
 /* on connected */
@@ -29,6 +28,7 @@ socketio(server).of('termctl').on('connection', function(socket) {
             cwd: process.env.HOME,
             env: process.env
         });
+        newPty.resize(50,24);
 
         /* connect the bidirectional pipe from front-end */
         newPty.stdout.pipe(stream).pipe(newPty.stdin);
@@ -38,16 +38,14 @@ socketio(server).of('termctl').on('connection', function(socket) {
             obj: newPty
         };
 
-        
-
-        /* if one socket disconnected, kill the spawned terminal */
+        /* if one socket disconnected, kill the spawned bash */
         socket.on('disconnect', function() {
             newPty.kill('SIGHUP');
             delete ptyMan[name];
         });
     });
 
-    /**/
+    /* receives a message of remove one terminal, kill the spawned bash */
     socket.on('remove', function(name) {
         ptyMan[name].obj.kill('SIGHUP');
         delete ptyMan[name];
