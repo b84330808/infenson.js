@@ -30,7 +30,6 @@ function createNewTerminal(){
         newTerm.setAttribute('class', 'terminal');
         newTerm.setAttribute('data-columns', '50');
         newTerm.setAttribute('data-rows', '24');
-        newTerm.setAttribute('ondblclick', 'removeTerminal(this.id);');
         /* create new terminal object */
         var term = new Terminal(newTerm.dataset);    
         /* create bidirectional stream */

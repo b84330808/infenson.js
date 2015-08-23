@@ -6,16 +6,17 @@
 body {
     width: 100%;
 }
-
+/*
 #leftp {
     float: left;
+    height: 100%;
     min-width: 200px;
 }
-
+*/
 #cssmenu {
     position: fixed;
     top: 0px;
-    left: 0px;
+    right: 0px;
     width: 200px;
 }
 
@@ -24,6 +25,7 @@ body {
 }
 
 .terminal-cont {
+    float: left;
     border: 1px #ffffff solid;
 }
 .terminal-header {
