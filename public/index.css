@@ -16,12 +16,13 @@ body {
 #cssmenu {
     position: fixed;
     top: 0px;
-    right: 0px;
+    left: 0px;
     width: 200px;
 }
 
 #rightp {
-    float: left;
+    float: right;
+    width: 80%;
 }
 
 .terminal-cont {
