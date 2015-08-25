@@ -163,11 +163,13 @@ $("body").keydown(function(e) {
     if (e.which == 16) { //shift
         var focusedTerm = document.activeElement.id;
         var i = stringToInt(focusedTerm, 4)
+        document.getElementById('term' + i).style.background = '#000000';
         while (true) {
             i++;
             if (termNums[i % terminalLimit] == true) {
                 i = i % terminalLimit;
                 document.getElementById('term' + i).focus();
+                document.getElementById('term' + i).style.background = '#1A1B1A';
                 break;
             }
             if(i>2*terminalLimit){
