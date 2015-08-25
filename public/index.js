@@ -1,6 +1,7 @@
 /* terminal number list */
+var terminalLimit = 10;
 var termNums = [];
-for(var i = 0; i < 10; i++){
+for (var i = 0; i < terminalLimit; i++) {
     termNums.push(false);
 }
 /* terminals manager */
@@ -12,83 +13,98 @@ var socket = io(location.origin + '/termctl');
 createNewTerminal();
 
 /* create a new ternimal */
-function createNewTerminal(){
+function createNewTerminal() {
     /* get a idle number from terminal number list */
     var tid = undefined;
-    for(var i = 0; i < 10; i++){
-        if(!termNums[i]){
+    for (var i = 0; i < 10; i++) {
+        if (!termNums[i]) {
             termNums[i] = true;
             tid = i;
             break;
         }
     }
+
     /* if get */
-    if(tid != undefined){
+    if (tid != undefined) {
         /* create new tag on DOM */
-        var newTerm = document.createElement('pre');
-        newTerm.setAttribute('id', 'term' + tid);
-        newTerm.setAttribute('class', 'terminal');
-        newTerm.setAttribute('data-columns', '50');
-        newTerm.setAttribute('data-rows', '24');
+        var newTerm = document.createElement('pre'); //terminal interface
+        newTerm.setAttribute('id', 'term' + tid); //give the terminal dom an  id
+        newTerm.setAttribute('class', 'terminal'); //assign the terminal class `terminal`
+        newTerm.setAttribute('data-columns', '50'); //assign the terminal data-columns
+        newTerm.setAttribute('data-rows', '24'); ////assign the terminal data-rows
+
         /* create new terminal object */
-        var term = new Terminal(newTerm.dataset);    
+        var term = new Terminal(newTerm.dataset);
+
         /* create bidirectional stream */
         var stream = ss.createStream({
             decodeStrings: false,
             encoding: 'utf-8'
         });
+
         /* send message to local server for setting up new bash child process */
         ss(socket).emit('new', stream, 'term' + tid);
+
         /* connect stream pipe */
         stream.pipe(term).dom(newTerm).pipe(stream);
 
-        /* append the new terminal object to container */
-        var newCloseBtn = document.createElement('a');
-        newCloseBtn.setAttribute('class', 'close-button');
-        newCloseBtn.setAttribute('href', 'javascript:removeTerminal(\'term' + tid + '\')');
-        newCloseBtn.innerHTML = 'X';
+        /* append the new terminal object to terminal-board */
+        var newCloseBtn = document.createElement('a'); //button for closing terminal 
+        newCloseBtn.setAttribute('class', 'close-button'); //assign the button class `close-button`
+        newCloseBtn.setAttribute('href', 'javascript:removeTerminal(\'term' + tid + '\')'); //assign the button behavior
+        newCloseBtn.innerHTML = 'X'; //the close button image
 
+        /* create terminal header */
         var newTermHeader = document.createElement('div');
         newTermHeader.setAttribute('class', 'terminal-header');
-        newTermHeader.innerHTML = 'term' + tid;
+
+        var newTermInfo = document.createElement('span');
+        newTermInfo.setAttribute('class', 'terminal-info');
+        newTermInfo.innerHTML = 'term' + tid;
+
+        newTermHeader.appendChild(newTermInfo);
         newTermHeader.appendChild(newCloseBtn);
 
+        /* create a terminal containing header and interface*/
         var newTermCont = document.createElement('div');
-        newTermCont.setAttribute('class', 'terminal-cont');
+        newTermCont.setAttribute('class', 'terminal-container');
         newTermCont.appendChild(newTermHeader);
         newTermCont.appendChild(newTerm);
 
-        document.getElementById('container').appendChild(newTermCont);
+        document.getElementById('terminal-board').appendChild(newTermCont);
 
         /* add cmds pre-defined */
-        var l = ['ls', 'cd ..', 'cd ~'];
-        var newMenutagName = document.createElement('span');
-        newMenutagName.innerHTML = 'Term ' + tid;
+        //var l = ['ls', 'cd ..', 'cd ~'];
 
-        var newMenutagA = document.createElement('a');
-        newMenutagA.setAttribute('href', '#');
-        newMenutagA.appendChild(newMenutagName);
+        /*create a terminal name be put in header later*/
+        // var newMenutagName = document.createElement('span');
+        // newMenutagName.innerHTML = 'Term ' + tid;
 
-        var newMenutag = document.createElement('li');
-        newMenutag.setAttribute('class', 'has-sub');
-        newMenutag.appendChild(newMenutagA);
 
-        var newMenutagUl = document.createElement('ul');
-        newMenutag.appendChild(newMenutagUl);
-        for(var i in l){
-            var newCmdName = document.createElement('span');
-            newCmdName.innerHTML = l[i];
+        // var newMenutagA = document.createElement('a');
+        // newMenutagA.setAttribute('href', '#');
+        // newMenutagA.appendChild(newMenutagName);
 
-            var newCmdA = document.createElement('a');
-            newCmdA.setAttribute('href', 'javascript:runCommand(\'term' + tid + '\', \'' + l[i] + '\');');
-            newCmdA.appendChild(newCmdName);
+        // var newMenutag = document.createElement('li');
+        // newMenutag.setAttribute('class', 'has-sub');
+        // newMenutag.appendChild(newMenutagA);
 
-            var newCmd = document.createElement('li');
-            newCmd.appendChild(newCmdA);
-            
-            newMenutagUl.appendChild(newCmd);
-        }
-        document.getElementById('termlist').appendChild(newMenutag);
+        // var newMenutagUl = document.createElement('ul');
+        // newMenutag.appendChild(newMenutagUl);
+        // for (var i in l) {
+        //     var newCmdName = document.createElement('span');
+        //     newCmdName.innerHTML = l[i];
+
+        //     var newCmdA = document.createElement('a');
+        //     newCmdA.setAttribute('href', 'javascript:runCommand(\'term' + tid + '\', \'' + l[i] + '\');');
+        //     newCmdA.appendChild(newCmdName);
+
+        //     var newCmd = document.createElement('li');
+        //     newCmd.appendChild(newCmdA);
+
+        //     newMenutagUl.appendChild(newCmd);
+        // }
+        // document.getElementById('termlist').appendChild(newMenutag);
 
         /* for getting user's input command */
         // stream.on('data', function (data) {
@@ -97,26 +113,87 @@ function createNewTerminal(){
         /*  */
         termMan['term' + tid] = {
             obj: newTermCont,
-            menutag: newMenutag,
+            //menutag: newMenutag,
             stream: stream
         };
-    }
-    else{
+
+    } else {
         alert('Can\'t create more!');
     }
 }
 
-function removeTerminal(termName){
-    document.getElementById('container').removeChild(termMan[termName].obj);
-    document.getElementById('termlist').removeChild(termMan[termName].menutag);
+function removeTerminal(termName) {
+    document.getElementById('terminal-board').removeChild(termMan[termName].obj);
+    //document.getElementById('termlist').removeChild(termMan[termName].menutag);
     termNums[parseInt(termName[4])] = false;
     delete termMan[termName];
     socket.emit('remove', termName);
 }
 
-function runCommand(termName, cmd){
-    termMan[termName].stream.write(cmd + '\n');
+function hideBar() {
+    document.getElementById('nav-bar').style.display = 'none';
+    document.getElementById('content').style.marginTop = '0px';
+    document.getElementById('showBar').style.display = 'block';
+
 }
+
+function showBar() {
+    document.getElementById('nav-bar').style.display = '';
+    document.getElementById('content').style.marginTop = '35px';
+    document.getElementById('showBar').style.display = 'none';
+}
+
+function showCommandBoard() {
+    document.getElementById('commandBoard').style.display = 'block';
+    document.getElementById('commandBoardBtnLink').href = 'javascript:hideCommandBoard()'
+    document.getElementById('commandBoardBtnText').innerHTML = 'close&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;command';
+}
+
+function hideCommandBoard() {
+    document.getElementById('commandBoard').style.display = 'none';
+    document.getElementById('commandBoardBtnLink').href = 'javascript:showCommandBoard()'
+    document.getElementById('commandBoardBtnText').innerHTML = 'custom command';
+
+}
+
+///////Quick focus next//////
+
+
+$("body").keydown(function(e) {
+    if (e.which == 16) { //shift
+        var focusedTerm = document.activeElement.id;
+        var i = stringToInt(focusedTerm, 4)
+        while (true) {
+            i++;
+            if (termNums[i % terminalLimit] == true) {
+                i = i % terminalLimit;
+                document.getElementById('term' + i).focus();
+                break;
+            }
+            if(i>2*terminalLimit){
+                break;
+            }
+        }
+    }
+});
+
+function stringToInt(string, trimBefore) {
+    return string.substr(trimBefore, string.length);
+}
+//////////////////////////////////
+
+// function editCommand(commandIndex){
+//     var value = document.getElementById('commandIndex').innerHTML;
+//     document.createElement('textarea');
+
+// }
+
+
+//<div class='command' id='command1' ondblclick='javascript: editCommand(command1)'>ls</div>
+
+// function runCommand(termName, cmd) {
+//     termMan[termName].stream.write(cmd + '\n');
+// }
 
 /* old codes */
 
@@ -132,3 +209,42 @@ function runCommand(termName, cmd){
 //     ss(socket).emit('new', stream, containers[i].dataset);
 //     stream.pipe(term).dom(containers[i]).pipe(stream);
 // }
+
+/*
+|--nav-bar
+|
+|--content
+            |
+            --------------terminal-board (id)
+            |
+            --------------terminal-container (class)
+            |                              |
+            |                              ----------------terminal-header (class)
+            |                              |                       |
+            |                              |                       -----------terminal-info (class)
+            |                              |                       |
+            |                              |                       ------------close-button  (class)
+            |                              |
+            |                              ----------------terminal (class)
+            |
+            --------------terminal-container (class)
+            |                              |
+            |                              ----------------terminal-header (class)
+            |                              |                       |
+            |                              |                       -----------terminal-info
+            |                              |                       |
+            |                              |                       ------------close-button
+            |                              |
+            |                              ----------------terminal (class)
+            |
+            --------------terminal-container (class)
+            |                              |
+            |                              ----------------terminal-header (class)
+            |                              |                       |
+            |                              |                       -----------terminal-info
+            |                              |                       |
+            |                              |                       ------------close-button
+            |                              |
+            |                              ----------------terminal (class)
+
+*/

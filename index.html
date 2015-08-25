@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>MultiWebTerminal</title>
-        
-        <link rel="stylesheet" type="text/css" href="/menu.css"/>
-        <link rel="stylesheet" type="text/css" href="/index.css"/>
-    </head>
 
-    <body>
-        <div id="cssmenu">
-            <ul>
-                <li><a href="javascript:createNewTerminal();"><span>New terminal</span></a></li>
-                <li class="active has-sub"><a href="#"><span>Command</span></a>
-                <ul id="termlist">
-                    <!--
-                    <li class="has-sub"><a href="#"><span>Product 1</span></a>
-                        <ul>
-                            <li><a href="#"><span>Sub Product</span></a></li>
-                            <li><a href="#"><span>Sub Product</span></a></li>
-                        </ul>
-                    </li>
-                    -->
-                </ul>
-                </li>
-                <li><a href="#"><span>Not implemented</span></a></li>
-                <li class="last"><a href="#"><span>KerKer</span></a></li>
-            </ul>
+<head>
+    <meta charset="utf-8" />
+    <title>MultiWebTerminal</title>
+    <link rel="stylesheet" type="text/css" href="/menu.css" />
+    <link rel="stylesheet" type="text/css" href="/terminal.css" />
+    <link rel="stylesheet" type="text/css" href="/index.css" />
+    <!--*******************************************************-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!--*******************************************************-->
+</head>
+
+<body>
+    <nav id="nav-bar">
+        <ul>
+            <li><a href="javascript:createNewTerminal();"><span>New terminal</span></a></li>
+            <li class="last"><a href="#"><span>KerKer</span></a></li>
+        </ul>
+        <ul class="right">
+            <li><a id='commandBoardBtnLink' href="javascript:showCommandBoard();"><span id='commandBoardBtnText'>custom command</span></a></li>
+            <li><a href="javascript:hideBar();"><span>Hide bar</span></a></li>
+        </ul>
+    </nav>
+    <a id='showBar' href="javascript:showBar();"><span>Show bar</span></a>
+    <div id="content">
+        <div id="terminal-board">
         </div>
+    </div>
 
-        <div id="rightp">
-            <div id="container">
-            </div>
-        </div>       
-    </body>
+    <div id='commandBoard'>
+        <div class='commandContainer'>
+            <div class='command' id='command1' ondblclick='javascript: editCommand(command1)'>ls</div>
+            <span>to</span>
+            <select class='commandTo' name="commandValue1">
+                <option value="term0">term0</option>
+                <option value="term1">term1</option>
+                <option value="term2">term2</option>
+            </select>
+            <button>launch</button>
+        </div>
+    </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-stream.js"></script>
-    <script src="/terminal.js"></script>
-    <script src="/index.js"></script>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io-stream.js"></script>
+<script src="/terminal.js"></script>
+<script src="/index.js"></script>
 
 </html>

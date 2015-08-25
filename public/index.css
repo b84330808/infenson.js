@@ -1,46 +1,50 @@
-* {
-    margin: 0px;
-    padding: 0px;
-}
-
-body {
-    width: 100%;
-}
-/*
-#leftp {
-    float: left;
-    height: 100%;
-    min-width: 200px;
-}
-*/
-#cssmenu {
+#nav-bar {
     position: fixed;
     top: 0px;
     left: 0px;
-    width: 200px;
-}
-
-#rightp {
-    float: right;
-    width: 80%;
-}
-
-.terminal-cont {
+    width: 100%;
+    margin: 0 0 1em 0;
+    padding: 0;
     float: left;
-    border: 1px #ffffff solid;
+    background-color: #414141;
+    z-index: 0;
 }
-.terminal-header {
-    text-align: center;
-    background: #d3d3d3;
-    color: #000000;
+
+#content {
+    margin-top: 35px;
 }
-.close-button {
-    float: right;
+
+/***********command board**********/
+#commandBoard {
+    position: fixed;
+    top: 35px;
+    right: 0px;
+    margin-right: 10px;
+    position: fixed;
+    width: 30%;
+    height: 70%;
+    background-color: #DDDDDD;
+    opacity: 0.7;
+    z-index: 5;  
+    display: none;  
+    padding: 10px;
 }
-.terminal {
-    background: black;
-    color: white;
-    font-family: Courier, monospace;
+
+.commandContainer{
+    width: auto;
+}
+
+.command{
+    width: 200px;
+    background-color: white;
     display: inline-block;
-    
 }
+
+.commandTo{
+
+}
+.
+
+
+
+
