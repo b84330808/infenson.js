@@ -1,4 +1,5 @@
 /* terminal number list */
+
 var terminalLimit = 10;
 var termNums = [];
 for (var i = 0; i < terminalLimit; i++) {
@@ -9,14 +10,16 @@ var termMan = {};
 
 /* socket for terminal control */
 var socket = io(location.origin + '/termctl');
-/* auto create one terminal (default) */
-createNewTerminal();
 
+/* auto create one terminal (default)  and focus on it*/
+createNewTerminal();
+$('#term0').css('background-color', '#1A1B1A');
+$('#term0').focus();
 /* create a new ternimal */
 function createNewTerminal() {
     /* get a idle number from terminal number list */
     var tid = undefined;
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < terminalLimit; i++) {
         if (!termNums[i]) {
             termNums[i] = true;
             tid = i;
@@ -157,27 +160,43 @@ function hideCommandBoard() {
 }
 
 ///////Quick focus next//////
-
-
+var focusedTerm = $('#term0');
 $("body").keydown(function(e) {
     if (e.which == 16) { //shift
-        var focusedTerm = document.activeElement.id;
-        var i = stringToInt(focusedTerm, 4)
-        document.getElementById('term' + i).style.background = '#000000';
-        while (true) {
-            i++;
-            if (termNums[i % terminalLimit] == true) {
-                i = i % terminalLimit;
-                document.getElementById('term' + i).focus();
-                document.getElementById('term' + i).style.background = '#1A1B1A';
-                break;
+        focusedThing = $(":focus"); //get the focused thing
+        if (focusedThing.hasClass('terminal')) { //maybe the focused thing is not a terminal (background..etc.)
+            focusedTerm = focusedThing;
+            var termManKeys = Object.keys(termMan);
+            var termManLength = termManKeys.length;
+
+            var nextFocusedTermId;
+            var nextFocusedTerm;
+            for (var i = 0; i < termManLength; i++) {
+                if (focusedTerm.attr('id') == termManKeys[i]) {
+                    nextFocusedTermId = termManKeys[(i + 1) % termManLength];
+                    nextFocusedTerm = $('#' + nextFocusedTermId);
+                    break;
+                };
             }
-            if(i>2*terminalLimit){
-                break;
-            }
+
+            $(focusedTerm).css('background-color', '#000000');
+            $(nextFocusedTerm).css('background-color', '#1A1B1A');
+            $(nextFocusedTerm).focus();
+            focusedTerm = nextFocusedTerm;
+
+        } else {
+            focusedTerm.focus();
         }
     }
 });
+
+function focused() {
+    if ($(":focus").hasClass('terminal')) {
+        focusedTerm.css('background-color', '#000000');
+        focusedTerm = $(":focus");
+        focusedTerm.css('background-color', '#1A1B1A');
+    };
+}
 
 function stringToInt(string, trimBefore) {
     return string.substr(trimBefore, string.length);
