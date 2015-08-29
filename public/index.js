@@ -160,36 +160,8 @@ function hideCommandBoard() {
 }
 
 ///////Quick focus next//////
-var focusedTerm = $('#term0');
-$("body").keydown(function(e) {
-    if (e.which == 16) { //shift
-        focusedThing = $(":focus"); //get the focused thing
-        if (focusedThing.hasClass('terminal')) { //maybe the focused thing is not a terminal (background..etc.)
-            focusedTerm = focusedThing;
-            var termManKeys = Object.keys(termMan);
-            var termManLength = termManKeys.length;
 
-            var nextFocusedTermId;
-            var nextFocusedTerm;
-            for (var i = 0; i < termManLength; i++) {
-                if (focusedTerm.attr('id') == termManKeys[i]) {
-                    nextFocusedTermId = termManKeys[(i + 1) % termManLength];
-                    nextFocusedTerm = $('#' + nextFocusedTermId);
-                    break;
-                };
-            }
-
-            $(focusedTerm).css('background-color', '#000000');
-            $(nextFocusedTerm).css('background-color', '#1A1B1A');
-            $(nextFocusedTerm).focus();
-            focusedTerm = nextFocusedTerm;
-
-        } else {
-            focusedTerm.focus();
-        }
-    }
-});
-
+var focusedTerm = $('#term0'); //default
 function focused() {
     if ($(":focus").hasClass('terminal')) {
         focusedTerm.css('background-color', '#000000');
@@ -198,9 +170,6 @@ function focused() {
     };
 }
 
-function stringToInt(string, trimBefore) {
-    return string.substr(trimBefore, string.length);
-}
 //////////////////////////////////
 
 // function editCommand(commandIndex){

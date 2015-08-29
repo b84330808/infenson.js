@@ -5,6 +5,7 @@ var routePairs = {
 	'/index.css'			: '/public/index.css',
 	'/terminal.css'			: '/public/terminal.css',
 	'/index.js'				: '/public/index.js',
+	'/hotkeys.js'				: '/public/hotkeys.js',
 	'/terminal.js'			: '/node_modules/terminal.js/dist/terminal.js',
 	'/socket.io-stream.js'	: '/node_modules/socket.io-stream/socket.io-stream.js'
 };
