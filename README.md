@@ -11,5 +11,5 @@ How to start
 
 Hotkeys 
 --------------------
-1. `ctrl + : `  switch to last terminal
-2. `ctrl + ' `  switch to next terminal
+1. `ctrl + < `  switch to last terminal
+2. `ctrl + > `  switch to next terminal

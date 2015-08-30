@@ -1,11 +1,11 @@
- var isCtrl = false;
  $("body").keydown(function(e) {
 
      e = e || window.event;
+     /***********Ctrl Key Start***********/
+     console.log(e.which);
      if (e.ctrlKey) {
-         console.log(e.which);
          switch (e.which) {
-             case 222:
+             case 190:
                  {
                      focusedThing = $(":focus"); //get the focused thing
                      if (focusedThing.hasClass('terminal')) { //maybe the focused thing is not a terminal (background..etc.)
@@ -35,7 +35,7 @@
                      }
                  }
                  break;
-             case 186:
+             case 188:
                  {
                      focusedThing = $(":focus"); //get the focused thing
                      if (focusedThing.hasClass('terminal')) { //maybe the focused thing is not a terminal (background..etc.)
@@ -67,7 +67,24 @@
                  }
                  break;
 
+
          }
 
      }
+     /***********Ctrl Key End***********/
+     
+     /***********Alt Key Start***********/
+
+     if (e.altKey) {
+     	console.log('alt press');
+     }
+     /***********Alt Key End***********/
+
+     /***********Shift Key Start***********/
+
+     if (e.shiftKey) {
+     	console.log('shift press');
+     }
+     /***********Shift Key End***********/
+
  });
