@@ -13,3 +13,6 @@ Hotkeys
 --------------------
 1. `ctrl + < `  switch to last terminal
 2. `ctrl + > `  switch to next terminal
+3. `ctrl + : `  toggle top-bar shown or hide
+4. `ctrl + '` create a new terminal
+5. `alt + '` delete the focus terminal

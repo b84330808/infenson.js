@@ -12,9 +12,9 @@ var termMan = {};
 var socket = io(location.origin + '/termctl');
 
 /* auto create one terminal (default)  and focus on it*/
+var focusedTerm ; 
 createNewTerminal();
-$('#term0').css('background-color', '#1A1B1A');
-$('#term0').focus();
+
 /* create a new ternimal */
 function createNewTerminal() {
     /* get a idle number from terminal number list */
@@ -120,6 +120,14 @@ function createNewTerminal() {
             stream: stream
         };
 
+        //If the new one is the only one, then it will be focus
+        if (Object.keys(termMan).length==1) {
+            console.log('ya');
+            focusedTerm = $('#term' + tid);
+            focusedTerm.css('background-color', '#1A1B1A');
+            focusedTerm.focus();
+        };
+
     } else {
         alert('Can\'t create more!');
     }
@@ -129,21 +137,49 @@ function removeTerminal(termName) {
     document.getElementById('terminal-board').removeChild(termMan[termName].obj);
     //document.getElementById('termlist').removeChild(termMan[termName].menutag);
     termNums[parseInt(termName[4])] = false;
+
+    //If delete the focus one, then focus will be switch to next one or last one.
+    if (termName == focusedTerm.attr('id')) {
+        var termManKeys = Object.keys(termMan);
+        var index = termManKeys.indexOf(termName);
+        var focusedTermId = termManKeys[index+1]||termManKeys[index-1];
+        focusedTerm = $('#'+focusedTermId);
+        focusedTerm.css('background-color', '#1A1B1A');
+        focusedTerm.focus();
+    }
+
     delete termMan[termName];
     socket.emit('remove', termName);
-}
-
-function hideBar() {
-    document.getElementById('nav-bar').style.display = 'none';
-    document.getElementById('content').style.marginTop = '0px';
-    document.getElementById('showBar').style.display = 'block';
 
 }
 
-function showBar() {
-    document.getElementById('nav-bar').style.display = '';
-    document.getElementById('content').style.marginTop = '35px';
-    document.getElementById('showBar').style.display = 'none';
+// function hideBar() {
+
+//     document.getElementById('nav-bar').style.display = 'none';
+//     document.getElementById('content').style.marginTop = '0px';
+//     document.getElementById('showBar').style.display = 'block';
+
+// }
+
+// function showBar() {
+//     document.getElementById('nav-bar').style.display = '';
+//     document.getElementById('content').style.marginTop = '35px';
+//     document.getElementById('showBar').style.display = 'none';
+// }
+
+var isBarShown = true;
+
+function toggleBar() {
+    if (isBarShown) {
+        document.getElementById('nav-bar').style.display = 'none';
+        document.getElementById('content').style.marginTop = '0px';
+        document.getElementById('showBar').style.display = 'block';
+    } else {
+        document.getElementById('nav-bar').style.display = '';
+        document.getElementById('content').style.marginTop = '35px';
+        document.getElementById('showBar').style.display = 'none';
+    }
+    isBarShown = !isBarShown;
 }
 
 function showCommandBoard() {
@@ -161,7 +197,7 @@ function hideCommandBoard() {
 
 ///////Quick focus next//////
 
-var focusedTerm = $('#term0'); //default
+
 function focused() {
     if ($(":focus").hasClass('terminal')) {
         focusedTerm.css('background-color', '#000000');

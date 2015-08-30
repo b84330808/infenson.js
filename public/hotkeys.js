@@ -66,24 +66,40 @@
                      }
                  }
                  break;
-
+             case 186:
+                 {
+                     toggleBar();
+                 }
+                 break;
+             case 222:
+                 {
+                     createNewTerminal();
+                 }
+                 break;
 
          }
 
      }
      /***********Ctrl Key End***********/
-     
+
      /***********Alt Key Start***********/
 
      if (e.altKey) {
-     	console.log('alt press');
+         switch (e.which) {
+             case 222:
+                 {
+                     console.log('alt press');
+                     removeTerminal(focusedTerm.attr('id'));
+                 }
+                 break;
+         }
      }
      /***********Alt Key End***********/
 
      /***********Shift Key Start***********/
 
      if (e.shiftKey) {
-     	console.log('shift press');
+         console.log('shift press');
      }
      /***********Shift Key End***********/
 
